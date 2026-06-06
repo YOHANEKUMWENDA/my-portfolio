@@ -52,6 +52,7 @@ const HeroSection = () => {
           <span className="text-accent font-medium">26th August 2026</span>. 
           Driven by <span className="text-secondary">Data Analysis</span>,{" "}
           <span className="text-primary">Cybersecurity</span>,{" "}
+           <span className="text-primary">IT Auditing</span>,{" "}
           <span className="text-secondary">Software Engineering</span>, and{" "}
           <span className="text-primary">Linux Administration</span>.
         </motion.p>

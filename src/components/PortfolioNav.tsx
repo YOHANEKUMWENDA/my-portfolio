@@ -9,7 +9,7 @@ const navItems = [
   { id: "projects", label: "Projects", icon: FolderOpen },
   { id: "skills", label: "Skills", icon: Zap },
   { id: "academics", label: "Academics", icon: BarChart3 },
-  { id: "certs", label: "Certs", icon: Shield },
+  { id: "certs", label: "Certifications", icon: Shield },
   { id: "contact", label: "Contact", icon: Mail },
 ];
 

@@ -73,9 +73,15 @@ const ContactSection = () => {
                 <Download size={18} className="text-accent" /> Download CV
               </h3>
               <p className="text-sm text-muted-foreground mb-3">Last updated: March 2026</p>
-              <button className="glass-card px-5 py-2.5 text-accent font-mono text-sm hover:glow-accent transition-shadow duration-300">
+              <a
+                href="/Certificates/Yohane_Kumwenda_CV%20final.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="glass-card inline-flex items-center gap-2 px-5 py-2.5 text-accent font-mono text-sm hover:glow-accent transition-shadow duration-300"
+              >
                 📄 Download PDF
-              </button>
+              </a>
             </div>
 
             {/* Social links */}

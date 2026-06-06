@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Shield, ExternalLink } from "lucide-react";
+import { Shield, ExternalLink, Download } from "lucide-react";
 
 interface Certificate {
   title: string;
@@ -11,9 +11,9 @@ interface Certificate {
 }
 
 const certs: Certificate[] = [
-  { title: "CYBERSECURITY & ITS TEN DOMAINS", issuer: "Coursera", date: "2026", color: "primary", file: "CYBERSECURITY & ITS TEN DOMAINS1.pdf" },
+  { title: "CYBERSECURITY & ITS TEN DOMAINS", issuer: "Coursera", date: "2026", color: "primary", file: "CYBERSECURITY_AND_ITS_TEN_DOMAINS.pdf" },
   { title: "CYBER THREAT MANAGEMENT", issuer: "Cisco Networking Academy", date: "2026", color: "secondary", file: "Cyber_Threat_Management_certificate.pdf" },
-  { title: "INFORMATIONS SYSTEMS AUDITING, CONTROLS AND ASSURANCE", issuer: "Coursera", date: "2026", color: "accent", file: "INFORMATIONS SYSTEMS AUDITING, CONTROLS AND ASSURANCE.pdf" },
+  { title: "INFORMATIONS SYSTEMS AUDITING, CONTROLS AND ASSURANCE", issuer: "Coursera", date: "2026", color: "accent", file: "INFORMATIONS_SYSTEMS_AUDITING_CONTROLS_AND_ASSURANCE.pdf" },
   { title: "END POINT SECURITY", issuer: "Cisco Networking Academy", date: "2026", color: "primary", file: "Endpoint_Security.pdf" },
   { title: "INTRODUCTION TO CYBERSECURITY", issuer: "Cisco Networking Academy", date: "2026", color: "secondary", file: "Introduction_to_Cybersecurity.pdf" },
   { title: "EXPLORING NETWORK WITH CISCO PACKET TRACER", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Exploring_Networking_with_Cisco.pdf" },
@@ -31,6 +31,8 @@ const certs: Certificate[] = [
              { title: "English for IT 2", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "English for IT 2.pdf" },
               { title: "Getting Started with speech in Microsoft", issuer: "Microsoft", date: "2026", color: "accent", file: "Getting started with speech in microsoft.pdf" },
                     { title: "StartUp Fundamentals", issuer: "Microsoft", date: "2026", color: "accent", file: "StartUp Fundamentals.pdf" },
+                          { title: "UNDP-IDT4M DIGITAL ADVOCATY", issuer: "Microsoft", date: "2026", color: "accent", file: "UNDP-IDT4M DIGITAL ADVOCATE.pdf" },
+                           { title: "BITCOIN", issuer: "Trezor Academy", date: "2026", color: "accent", file: "Trezor Academy Certificate.pdf" },
 ];
 
 const glowMap: Record<string, string> = {
@@ -43,6 +45,46 @@ const textMap: Record<string, string> = {
   primary: "text-primary",
   secondary: "text-secondary",
   accent: "text-accent",
+};
+
+const CertificateCard = ({ cert, delay }: { cert: Certificate; delay: number }) => {
+  const certificateUrl = `/Certificates/${encodeURIComponent(cert.file)}`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay }}
+      className={`glass-card p-5 transition-all duration-500 group ${glowMap[cert.color]}`}
+    >
+      <div className="flex items-start justify-between mb-3">
+        <Shield className={`${textMap[cert.color]}`} size={24} />
+        <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
+      </div>
+      <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
+      <p className="text-sm text-muted-foreground mb-4">{cert.issuer}</p>
+      <div className="flex flex-wrap gap-3">
+        <a
+          href={certificateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
+        >
+          <ExternalLink size={12} />
+          <span>View</span>
+        </a>
+        <a
+          href={certificateUrl}
+          download
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
+        >
+          <Download size={12} />
+          <span>Download</span>
+        </a>
+      </div>
+    </motion.div>
+  );
 };
 
 const CertificationsVault = () => {
@@ -59,11 +101,6 @@ const CertificationsVault = () => {
 
   const filteredCerts = selectedIssuer === "All" ? certs : certs.filter((cert) => cert.issuer === selectedIssuer);
 
-  const handleViewCertificate = (fileName: string) => {
-    const certificatePath = `/Certificates/${fileName}`;
-    window.open(certificatePath, "_blank");
-  };
-
   return (
     <div className="section-container">
       <div className="max-w-5xl mx-auto w-full">
@@ -78,28 +115,7 @@ const CertificationsVault = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {previewCerts.map((cert, i) => (
-            <motion.div
-              key={cert.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <Shield className={`${textMap[cert.color]}`} size={24} />
-                <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
-              </div>
-              <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
-              <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
-              <button
-                onClick={() => handleViewCertificate(cert.file)}
-                className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
-              >
-                <ExternalLink size={12} />
-                <span>View Certificate</span>
-              </button>
-            </motion.div>
+            <CertificateCard key={cert.title} cert={cert} delay={i * 0.1} />
           ))}
         </div>
 
@@ -146,27 +162,7 @@ const CertificationsVault = () => {
                       <h3 className="text-xl font-semibold mb-4">{issuer}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {issuerCerts.map((cert, index) => (
-                          <motion.div
-                            key={cert.title}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
-                          >
-                            <div className="flex items-start justify-between mb-3">
-                              <Shield className={`${textMap[cert.color]}`} size={24} />
-                              <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
-                            </div>
-                            <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
-                            <button
-                              onClick={() => handleViewCertificate(cert.file)}
-                              className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
-                            >
-                              <ExternalLink size={12} />
-                              <span>View Certificate</span>
-                            </button>
-                          </motion.div>
+                          <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} />
                         ))}
                       </div>
                     </div>
@@ -175,27 +171,7 @@ const CertificationsVault = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filteredCerts.map((cert, index) => (
-                    <motion.div
-                      key={cert.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <Shield className={`${textMap[cert.color]}`} size={24} />
-                        <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
-                      </div>
-                      <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
-                      <button
-                        onClick={() => handleViewCertificate(cert.file)}
-                        className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
-                      >
-                        <ExternalLink size={12} />
-                        <span>View Certificate</span>
-                      </button>
-                    </motion.div>
+                    <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} />
                   ))}
                 </div>
               )}

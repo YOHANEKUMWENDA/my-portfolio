@@ -1,0 +1,210 @@
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Shield, ExternalLink } from "lucide-react";
+
+interface Certificate {
+  title: string;
+  issuer: string;
+  date: string;
+  color: string;
+  file: string;
+}
+
+const certs: Certificate[] = [
+  { title: "CYBERSECURITY & ITS TEN DOMAINS", issuer: "Coursera", date: "2026", color: "primary", file: "CYBERSECURITY & ITS TEN DOMAINS1.pdf" },
+  { title: "CYBER THREAT MANAGEMENT", issuer: "Cisco Networking Academy", date: "2026", color: "secondary", file: "Cyber_Threat_Management_certificate.pdf" },
+  { title: "INFORMATIONS SYSTEMS AUDITING, CONTROLS AND ASSURANCE", issuer: "Coursera", date: "2026", color: "accent", file: "INFORMATIONS SYSTEMS AUDITING, CONTROLS AND ASSURANCE.pdf" },
+  { title: "END POINT SECURITY", issuer: "Cisco Networking Academy", date: "2026", color: "primary", file: "Endpoint_Security.pdf" },
+  { title: "INTRODUCTION TO CYBERSECURITY", issuer: "Cisco Networking Academy", date: "2026", color: "secondary", file: "Introduction_to_Cybersecurity.pdf" },
+  { title: "EXPLORING NETWORK WITH CISCO PACKET TRACER", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Exploring_Networking_with_Cisco.pdf" },
+   { title: "FOUNDATIONS OF DIGITAL MARKETING AND E-COMMERCE", issuer: "Coursera", date: "2023", color: "accent", file: "foundations of digital marketing.pdf" },
+    { title: "ATTRACT AND ENGAGE CUSTOMERS WITH DIGITAL MARKETING", issuer: "Coursera", date: "2023", color: "accent", file: "Attract and Engage Customers with Digital Marketing.pdf" },
+        { title: "Exploring Internet of Things with Cisco Packet Tracer", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Exploring Internet of Things with Cisco Packet Tracer.pdf" },
+         { title: "Introduction to Modern AI", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Introduction to Modern AI.pdf" },
+         { title: "Introduction to Greenhouse Gas Accounting for IT", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Introduction to Greenhouse Gas Accounting for IT.pdf" },
+          { title: "Network Defense", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Network Defense.pdf" },
+          { title: "Network Support and Security", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Network Support and Security.pdf" },
+    { title: "Operating Systems Support", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Operating Systems Support.pdf" },
+          { title: "Using Computer and Mobile Devices", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Using Computer and Mobile Devices.pdf" },
+           { title: "English for IT 1", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "English for IT 1.pdf" },
+            { title: "JavaScript Essentials 1", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "JavaScript Essentials 1.pdf" },
+             { title: "English for IT 2", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "English for IT 2.pdf" },
+              { title: "Getting Started with speech in Microsoft", issuer: "Microsoft", date: "2026", color: "accent", file: "Getting started with speech in microsoft.pdf" },
+                    { title: "StartUp Fundamentals", issuer: "Microsoft", date: "2026", color: "accent", file: "StartUp Fundamentals.pdf" },
+];
+
+const glowMap: Record<string, string> = {
+  primary: "hover:glow-primary",
+  secondary: "hover:glow-secondary",
+  accent: "hover:glow-accent",
+};
+
+const textMap: Record<string, string> = {
+  primary: "text-primary",
+  secondary: "text-secondary",
+  accent: "text-accent",
+};
+
+const CertificationsVault = () => {
+  const [showAll, setShowAll] = useState(false);
+  const [selectedIssuer, setSelectedIssuer] = useState("All");
+
+  const previewCerts = certs.slice(0, 6);
+  const issuers = ["All", ...Array.from(new Set(certs.map((cert) => cert.issuer)))];
+  const groupedCerts = certs.reduce<Record<string, Certificate[]>>((acc, cert) => {
+    if (!acc[cert.issuer]) acc[cert.issuer] = [];
+    acc[cert.issuer].push(cert);
+    return acc;
+  }, {});
+
+  const filteredCerts = selectedIssuer === "All" ? certs : certs.filter((cert) => cert.issuer === selectedIssuer);
+
+  const handleViewCertificate = (fileName: string) => {
+    const certificatePath = `/Certificates/${fileName}`;
+    window.open(certificatePath, "_blank");
+  };
+
+  return (
+    <div className="section-container">
+      <div className="max-w-5xl mx-auto w-full">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-gradient-primary mb-2">Certifications Vault</h2>
+          <p className="text-muted-foreground font-mono text-sm"></p>
+        </motion.div>
+
+        <div className="mb-6 text-sm text-muted-foreground">
+          Showing {previewCerts.length} of {certs.length} certificates. Click “See all” to explore every credential grouped by issuer.
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {previewCerts.map((cert, i) => (
+            <motion.div
+              key={cert.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <Shield className={`${textMap[cert.color]}`} size={24} />
+                <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
+              </div>
+              <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
+              <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
+              <button
+                onClick={() => handleViewCertificate(cert.file)}
+                className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
+              >
+                <ExternalLink size={12} />
+                <span>View Certificate</span>
+              </button>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="glass-card px-6 py-3 text-sm font-mono text-primary hover:glow-primary transition-shadow duration-300"
+          >
+            {showAll ? "Show fewer certificates" : "See all certificates"}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {showAll && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="overflow-hidden mt-10"
+            >
+              <div className="mb-6 flex flex-wrap gap-2">
+                {issuers.map((issuer) => (
+                  <button
+                    key={issuer}
+                    type="button"
+                    onClick={() => setSelectedIssuer(issuer)}
+                    className={`rounded-full px-4 py-2 text-xs font-mono transition-all duration-300 ${
+                      selectedIssuer === issuer
+                        ? "bg-primary text-primary-foreground shadow-lg"
+                        : "glass-card text-muted-foreground hover:bg-primary/10"
+                    }`}
+                  >
+                    {issuer}
+                  </button>
+                ))}
+              </div>
+
+              {selectedIssuer === "All" ? (
+                <div className="space-y-8">
+                  {Object.entries(groupedCerts).map(([issuer, issuerCerts]) => (
+                    <div key={issuer}>
+                      <h3 className="text-xl font-semibold mb-4">{issuer}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {issuerCerts.map((cert, index) => (
+                          <motion.div
+                            key={cert.title}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <Shield className={`${textMap[cert.color]}`} size={24} />
+                              <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
+                            </div>
+                            <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
+                            <button
+                              onClick={() => handleViewCertificate(cert.file)}
+                              className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
+                            >
+                              <ExternalLink size={12} />
+                              <span>View Certificate</span>
+                            </button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filteredCerts.map((cert, index) => (
+                    <motion.div
+                      key={cert.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className={`glass-card p-5 cursor-pointer transition-all duration-500 group ${glowMap[cert.color]}`}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <Shield className={`${textMap[cert.color]}`} size={24} />
+                        <span className="font-mono text-xs text-muted-foreground">{cert.date}</span>
+                      </div>
+                      <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{cert.issuer}</p>
+                      <button
+                        onClick={() => handleViewCertificate(cert.file)}
+                        className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
+                      >
+                        <ExternalLink size={12} />
+                        <span>View Certificate</span>
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+export default CertificationsVault;

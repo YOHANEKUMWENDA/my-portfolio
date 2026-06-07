@@ -33,6 +33,7 @@ const certs: Certificate[] = [
                     { title: "StartUp Fundamentals", issuer: "Microsoft", date: "2026", color: "accent", file: "StartUp Fundamentals.pdf" },
                           { title: "UNDP-IDT4M DIGITAL ADVOCATY", issuer: "Microsoft", date: "2026", color: "accent", file: "UNDP-IDT4M DIGITAL ADVOCATE.pdf" },
                            { title: "BITCOIN", issuer: "Trezor Academy", date: "2026", color: "accent", file: "Trezor Academy Certificate.pdf" },
+                            { title: "Entrepreneurship Learning Pathway", issuer: "LinkedIn Learning", date: "2025", color: "accent", file: "Entrepreneurship Learning Pathway.pdf" },
 ];
 
 const glowMap: Record<string, string> = {

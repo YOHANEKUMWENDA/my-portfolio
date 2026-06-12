@@ -12,6 +12,14 @@ const projects = [
     demo: "https://nthaka-guide.vercel.app/",
   },
   {
+  title: "St. Thereza Catholic Church",
+  description: "A full-stack parish web system for St. Thereza Catholic Church in Champhira, Malawi. Features include public event listings, mass schedules, prayer request submissions, contact messaging, newsletter signup, and an admin dashboard for managing content, announcements, and parish bulletins.",
+  category: "Web",
+  tech: ["React", "FastAPI", "PostgreSQL", "Cloudinary"],
+  github: "#",
+  demo: "https://st-thereza-catholic-church.vercel.app/",
+},
+  {
   title: "Health Facility Finder System",
   description: "A web-based system that helps patients in Malawi locate the nearest health facility to them using real-time geolocation and pgRouting. Built for both patients finding clinics and hospital staff managing services.",
   category: "Systems",

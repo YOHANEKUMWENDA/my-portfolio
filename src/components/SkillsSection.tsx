@@ -5,94 +5,49 @@ const skillGroups = [
   {
     title: "Programming",
     icon: Code,
-    skills: [
-      { name: "Python", level: 80 },
-      { name: "JavaScript/TS", level: 85 },
-      { name: "Java", level: 70 },
-      { name: "HTML/CSS", level: 95 },
-    ],
-    
+    skills: ["Python", "JavaScript/TS", "Java", "HTML/CSS"],
   },
-   {
+  {
     title: "Digital Marketing",
     icon: Code,
-    skills: [
-      { name: "SEO", level: 80 },
-      { name: "Social Media Marketing", level: 85 },
-      { name: "Content Strategy", level: 75 },
-      { name: "Google Ads", level: 85 },
-    ],
-    
+    skills: ["SEO", "Social Media Marketing", "Content Strategy", "Google Ads"],
   },
   {
     title: "Tools & Frameworks",
     icon: Wrench,
-    skills: [
-      { name: "React", level: 85 },
-       { name: "React Native", level: 85 },
-        { name: "Excel", level: 85 },
-      { name: "Node.js", level: 75 },
-      { name: "Power BI", level: 85 },
-      { name: "Git", level: 90 },
-    ],
-  },
+    skills: ["React", "React Native", "Excel", "Node.js", "Power BI", "Git","FastAPI", "Flask"],  },
   {
     title: "Systems & Analysis",
     icon: Cpu,
-    skills: [
-      { name: "System Design", level: 80 },
-      { name: "Data Modeling", level: 85 },
-      { name: "UML", level: 75 },
-      
-    ],
+    skills: ["System Design", "Data Modeling", "UML"],
   },
   {
     title: "Databases",
     icon: Database,
-    skills: [
-      { name: "PostgreSQL", level: 85 },
-      { name: "MySQL", level: 70 },
-  
-    ],
+    skills: ["PostgreSQL", "MySQL"],
   },
   {
     title: "IT Auditing & Consulting",
     icon: Wrench,
-    skills: [
-      { name: "Risk Assessment", level: 88 },
-      { name: "IT Controls", level: 72 },
-      { name: "Compliance", level: 80 },
-    
-    ],
+    skills: ["Risk Assessment", "IT Controls", "Compliance"],
   },
   {
     title: "Data & AI",
     icon: Database,
-    skills: [
-      { name: "Data Analysis", level: 88 },
-      { name: "Machine Learning", level: 72 },
-      { name: "Visualization", level: 80 },
-      { name: "Statistics", level: 78 },
-    ],
+    skills: ["Data Analysis", "Machine Learning", "Visualization", "Statistics"],
   },
 ];
 
-const SkillBar = ({ name, level, delay }: { name: string; level: number; delay: number }) => (
-  <div className="mb-3">
-    <div className="flex justify-between text-sm mb-1">
-      <span className="font-mono">{name}</span>
-      <span className="text-muted-foreground font-mono">{level}%</span>
-    </div>
-    <div className="h-2 rounded-full bg-muted overflow-hidden">
-      <motion.div
-        className="h-full rounded-full bg-gradient-to-r from-primary to-secondary"
-        initial={{ width: 0 }}
-        whileInView={{ width: `${level}%` }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, delay, ease: "easeOut" }}
-      />
-    </div>
-  </div>
+const SkillChip = ({ name, delay }) => (
+  <motion.span
+    initial={{ opacity: 0, y: 6 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.4, delay, ease: "easeOut" }}
+    className="inline-block px-3 py-1.5 mr-2 mb-2 rounded-full text-sm font-mono bg-muted/60 border border-primary/10 hover:border-primary/40 hover:text-primary transition-colors duration-200"
+  >
+    {name}
+  </motion.span>
 );
 
 const SkillsSection = () => {
@@ -120,9 +75,11 @@ const SkillsSection = () => {
                 </div>
                 <h3 className="text-lg font-bold">{group.title}</h3>
               </div>
-              {group.skills.map((skill, si) => (
-                <SkillBar key={skill.name} name={skill.name} level={skill.level} delay={gi * 0.1 + si * 0.1} />
-              ))}
+              <div className="flex flex-wrap">
+                {group.skills.map((skill, si) => (
+                  <SkillChip key={skill} name={skill} delay={gi * 0.05 + si * 0.05} />
+                ))}
+              </div>
             </motion.div>
           ))}
         </div>

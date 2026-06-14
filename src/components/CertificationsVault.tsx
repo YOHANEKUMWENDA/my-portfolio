@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Shield, ExternalLink, Download } from "lucide-react";
+import { Shield, ExternalLink, Download, X } from "lucide-react";
 
 interface Certificate {
   title: string;
@@ -48,7 +48,15 @@ const textMap: Record<string, string> = {
   accent: "text-accent",
 };
 
-const CertificateCard = ({ cert, delay }: { cert: Certificate; delay: number }) => {
+const CertificateCard = ({
+  cert,
+  delay,
+  onView,
+}: {
+  cert: Certificate;
+  delay: number;
+  onView: (cert: Certificate) => void;
+}) => {
   const certificateUrl = `/Certificates/${encodeURIComponent(cert.file)}`;
 
   return (
@@ -66,15 +74,14 @@ const CertificateCard = ({ cert, delay }: { cert: Certificate; delay: number }) 
       <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{cert.title}</h3>
       <p className="text-sm text-muted-foreground mb-4">{cert.issuer}</p>
       <div className="flex flex-wrap gap-3">
-        <a
-          href={certificateUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={() => onView(cert)}
           className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors hover:underline"
         >
           <ExternalLink size={12} />
           <span>View</span>
-        </a>
+        </button>
         <a
           href={certificateUrl}
           download
@@ -88,9 +95,73 @@ const CertificateCard = ({ cert, delay }: { cert: Certificate; delay: number }) 
   );
 };
 
+const CertificatePreviewModal = ({
+  cert,
+  onClose,
+}: {
+  cert: Certificate;
+  onClose: () => void;
+}) => {
+  const certificateUrl = `/Certificates/${encodeURIComponent(cert.file)}`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(e) => e.stopPropagation()}
+        className="glass-card w-full max-w-3xl h-[85vh] flex flex-col overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
+          <div className="min-w-0">
+            <h3 className="font-bold truncate">{cert.title}</h3>
+            <p className="text-xs text-muted-foreground">{cert.issuer} · {cert.date}</p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 ml-4">
+            <a
+              href={certificateUrl}
+              download
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors hover:underline"
+            >
+              <Download size={14} />
+              <span>Download</span>
+            </a>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close preview"
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              <X size={16} />
+              <span>Cancel</span>
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 bg-muted/30">
+          <iframe
+            src={certificateUrl}
+            title={cert.title}
+            className="w-full h-full"
+          />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const CertificationsVault = () => {
   const [showAll, setShowAll] = useState(false);
   const [selectedIssuer, setSelectedIssuer] = useState("All");
+  const [previewCert, setPreviewCert] = useState<Certificate | null>(null);
 
   const previewCerts = certs.slice(0, 6);
   const issuers = ["All", ...Array.from(new Set(certs.map((cert) => cert.issuer)))];
@@ -116,7 +187,7 @@ const CertificationsVault = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {previewCerts.map((cert, i) => (
-            <CertificateCard key={cert.title} cert={cert} delay={i * 0.1} />
+            <CertificateCard key={cert.title} cert={cert} delay={i * 0.1} onView={setPreviewCert} />
           ))}
         </div>
 
@@ -163,7 +234,7 @@ const CertificationsVault = () => {
                       <h3 className="text-xl font-semibold mb-4">{issuer}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {issuerCerts.map((cert, index) => (
-                          <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} />
+                          <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} onView={setPreviewCert} />
                         ))}
                       </div>
                     </div>
@@ -172,7 +243,7 @@ const CertificationsVault = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filteredCerts.map((cert, index) => (
-                    <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} />
+                    <CertificateCard key={cert.title} cert={cert} delay={index * 0.05} onView={setPreviewCert} />
                   ))}
                 </div>
               )}
@@ -180,6 +251,12 @@ const CertificationsVault = () => {
           )}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {previewCert && (
+          <CertificatePreviewModal cert={previewCert} onClose={() => setPreviewCert(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

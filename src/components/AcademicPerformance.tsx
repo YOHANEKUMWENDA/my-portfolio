@@ -81,9 +81,14 @@ const semesterData = [
   },
   {
     label: "Fourth Year, Sem 2",
-    gpa: 0,
-    status: "Pending",
-    subjects: [],
+    gpa: 3.74,
+    subjects: [
+      { code: "COM421", name: "Cloud Computing", score: 72, grade: "B+", gp: 3.74 },
+      { code: "COM422", name: "ICT Project", score: 80, grade: "A", gp: 3.75 },
+      { code: "INF421", name: "Information Technology Audit Control", score: 74, grade: "B+", gp: 3.74 },
+      { code: "INF422", name: "Information Technology Practice and Consultancy", score: 71, grade: "B+", gp: 3.74 },
+      { code: "INF423", name: "Internet Governance", score: 78, grade: "A", gp: 3.75 },
+    ],
   },
 ];
 
@@ -165,7 +170,6 @@ const AcademicPerformance = () => {
               {semesterData.map((sem, i) => {
                 const barH = sem.gpa > 0 ? (sem.gpa / maxGpa) * maxBarHeight : 0;
                 const isSelected = selected === i;
-                const isPending = sem.status === "Pending";
 
                 return (
                   <div
@@ -177,33 +181,20 @@ const AcademicPerformance = () => {
                       className="text-xs font-mono transition-colors duration-200"
                       style={{ color: "hsl(174 72% 45%)" }}
                     >
-                      {isPending ? "—" : sem.gpa}
+                      {sem.gpa}
                     </span>
 
-                    {isPending ? (
-                      <div
-                        className="w-full rounded-t-md border border-dashed flex items-center justify-center"
-                        style={{
-                          height: 30,
-                          borderColor: "hsl(174 72% 25%)",
-                          background: "transparent",
-                        }}
-                      >
-                        <span className="text-[9px] font-mono text-muted-foreground">TBD</span>
-                      </div>
-                    ) : (
-                      <motion.div
-                        className="w-full rounded-t-md transition-opacity duration-200"
-                        style={{
-                          background: "linear-gradient(to top, hsl(174 72% 40%), hsl(174 72% 55%))",
-                          opacity: isSelected ? 1 : 0.45,
-                        }}
-                        initial={{ height: 0 }}
-                        whileInView={{ height: barH }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: i * 0.08 }}
-                      />
-                    )}
+                    <motion.div
+                      className="w-full rounded-t-md transition-opacity duration-200"
+                      style={{
+                        background: "linear-gradient(to top, hsl(174 72% 40%), hsl(174 72% 55%))",
+                        opacity: isSelected ? 1 : 0.45,
+                      }}
+                      initial={{ height: 0 }}
+                      whileInView={{ height: barH }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: i * 0.08 }}
+                    />
 
                     <span
                       className="text-[10px] font-mono mt-1 text-center transition-colors duration-200 leading-tight"
@@ -232,92 +223,75 @@ const AcademicPerformance = () => {
             </div>
 
             <AnimatePresence mode="wait">
-              {activeSem.status === "Pending" ? (
-                <motion.div
-                  key="pending"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center h-48 gap-3"
-                >
-                  <span className="text-4xl">⏳</span>
-                  <p className="text-muted-foreground font-mono text-sm text-center">
-                    Results pending
-                    <br />
-                    <span className="text-xs opacity-60">Results will be available soon</span>
-                  </p>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={activeSem.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-3"
-                >
-                  {activeSem.subjects.map((subj, i) => (
-                    <motion.div
-                      key={subj.code}
-                      initial={{ opacity: 0, x: 12 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07 }}
-                    >
-                      <div className="flex justify-between items-center text-sm mb-1 gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span
-                            className="text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0"
-                            style={{
-                              background: "hsl(174 72% 20%)",
-                              color: "hsl(174 72% 65%)",
-                            }}
-                          >
-                            {subj.code}
-                          </span>
-                          <span className="font-mono text-xs truncate text-muted-foreground">
-                            {subj.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-xs font-mono text-muted-foreground">
-                            {subj.score}%
-                          </span>
-                          <span
-                            className="font-mono font-bold text-sm w-8 text-right"
-                            style={{ color: "hsl(174 72% 55%)" }}
-                          >
-                            {subj.grade}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full"
-                          style={{
-                            background: `linear-gradient(90deg, hsl(174 72% 40%), hsl(174 72% 56%))`,
-                          }}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${subj.score}%` }}
-                          transition={{ duration: 0.6, delay: i * 0.07 }}
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
-
-                  {/* Semester GPA summary */}
-                  <div
-                    className="flex justify-between items-center pt-3 mt-1 border-t"
-                    style={{ borderColor: "hsl(174 72% 20%)" }}
+              <motion.div
+                key={activeSem.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-3"
+              >
+                {activeSem.subjects.map((subj, i) => (
+                  <motion.div
+                    key={subj.code}
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.07 }}
                   >
-                    <span className="text-xs font-mono text-muted-foreground">
-                      Semester GPA
-                    </span>
-                    <span className="text-sm font-bold text-primary font-mono">
-                      {activeSem.gpa} / 4.00
-                    </span>
-                  </div>
-                </motion.div>
-              )}
+                    <div className="flex justify-between items-center text-sm mb-1 gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0"
+                          style={{
+                            background: "hsl(174 72% 20%)",
+                            color: "hsl(174 72% 65%)",
+                          }}
+                        >
+                          {subj.code}
+                        </span>
+                        <span className="font-mono text-xs truncate text-muted-foreground">
+                          {subj.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-xs font-mono text-muted-foreground">
+                          {subj.score}%
+                        </span>
+                        <span
+                          className="font-mono font-bold text-sm w-8 text-right"
+                          style={{ color: "hsl(174 72% 55%)" }}
+                        >
+                          {subj.grade}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, hsl(174 72% 40%), hsl(174 72% 56%))`,
+                        }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${subj.score}%` }}
+                        transition={{ duration: 0.6, delay: i * 0.07 }}
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Semester GPA summary */}
+                <div
+                  className="flex justify-between items-center pt-3 mt-1 border-t"
+                  style={{ borderColor: "hsl(174 72% 20%)" }}
+                >
+                  <span className="text-xs font-mono text-muted-foreground">
+                    Semester GPA
+                  </span>
+                  <span className="text-sm font-bold text-primary font-mono">
+                    {activeSem.gpa} / 4.00
+                  </span>
+                </div>
+              </motion.div>
             </AnimatePresence>
           </motion.div>
         </div>

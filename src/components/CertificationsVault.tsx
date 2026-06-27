@@ -34,6 +34,7 @@ const certs: Certificate[] = [
                           { title: "UNDP-IDT4M DIGITAL ADVOCATY", issuer: "Microsoft", date: "2026", color: "accent", file: "UNDP-IDT4M DIGITAL ADVOCATE.pdf" },
                            { title: "BITCOIN", issuer: "Trezor Academy", date: "2026", color: "accent", file: "Trezor Academy Certificate.pdf" },
                             { title: "Entrepreneurship Learning Pathway", issuer: "LinkedIn Learning", date: "2025", color: "accent", file: "Entrepreneurship Learning Pathway.pdf" },
+                            { title: "ICTAM STUDENT MEMBERSHIP", issuer: "ICT Association of Malawi", date: "2026", color: "accent", file: "YOHANE KUMWENDA ICTAM certificate.pdf" },
 ];
 
 const glowMap: Record<string, string> = {

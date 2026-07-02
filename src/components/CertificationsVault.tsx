@@ -35,6 +35,9 @@ const certs: Certificate[] = [
                            { title: "BITCOIN", issuer: "Trezor Academy", date: "2026", color: "accent", file: "Trezor Academy Certificate.pdf" },
                             { title: "Entrepreneurship Learning Pathway", issuer: "LinkedIn Learning", date: "2025", color: "accent", file: "Entrepreneurship Learning Pathway.pdf" },
                             { title: "ICTAM STUDENT MEMBERSHIP", issuer: "ICT Association of Malawi", date: "2026", color: "accent", file: "YOHANE KUMWENDA ICTAM certificate.pdf" },
+                             { title: "Ethical Hacker", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Ethical_Hacker_certificate.pdf" },
+                              { title: "Managing Business Venture", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Managing_a_Business_Venture_certificate.pdf" },
+                               { title: "Python Essentials 2", issuer: "Cisco Networking Academy", date: "2026", color: "accent", file: "Python_Essentials_2_certificate.pdf" },
 ];
 
 const glowMap: Record<string, string> = {
